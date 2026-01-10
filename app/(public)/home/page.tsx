@@ -8,7 +8,7 @@ import { ReportFeed } from '@/components/home/ReportFeed'
 import { TipsWidget } from '@/components/home/TipsWidget'
 import { HazardTrendChart } from '@/components/charts/HazardTrendChart'
 import { RegionRiskChart } from '@/components/charts/RegionRiskChart'
-import { SkeletonCard, SkeletonChart } from '@/components/ui/Skeleton'
+import { SkeletonStats, SkeletonChart } from '@/components/ui/Skeleton'
 import { dummyReports, type DummyReport } from '@/data/dummyReports'
 import { hazardTrendData } from '@/data/dummyAnalytics'
 import { useReportStore } from '@/store/useReportStore'
@@ -99,11 +99,7 @@ export default function HomePage() {
       />
 
       {isLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <SkeletonCard key={i} />
-          ))}
-        </div>
+        <SkeletonStats />
       ) : (
         <StatsCards extraReports={stats.newReportsToday} />
       )}

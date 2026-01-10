@@ -1,26 +1,14 @@
 'use client'
 
+import { memo } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { NoVerificationHistory } from '@/components/ui/EmptyState'
+import { FreshnessIndicator } from '@/components/ui/ConfidenceBadge'
 import { useRecentVerifications } from '@/store/useReportStore'
 
-function formatTimeAgo(timestamp: string): string {
-  const now = new Date()
-  const date = new Date(timestamp)
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-
-  if (seconds < 60) return 'Just now'
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`
-  return `${Math.floor(seconds / 86400)}d ago`
-}
-
-export function VerificationHistory() {
+function VerificationHistoryComponent() {
   const verifications = useRecentVerifications(5)
-
-  if (verifications.length === 0) {
-    return null
-  }
 
   const statusConfig = {
     verified: { variant: 'safe' as const, label: 'Verified' },
@@ -57,39 +45,44 @@ export function VerificationHistory() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {verifications.map((verification) => {
-            const config = statusConfig[verification.status]
-            return (
-              <div
-                key={verification.id}
-                className="flex items-start gap-3 p-3 bg-[var(--bg-muted)] rounded-lg"
-              >
-                <div className="text-[var(--text-secondary)] mt-0.5">
-                  {inputTypeIcons[verification.inputType]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[var(--text-primary)] truncate">
-                    {verification.inputContent.slice(0, 50)}
-                    {verification.inputContent.length > 50 ? '...' : ''}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant={config.variant} className="text-xs">
-                      {config.label}
-                    </Badge>
-                    <span className="text-xs text-[var(--text-secondary)]">
-                      {verification.confidence}%
-                    </span>
+        {verifications.length === 0 ? (
+          <NoVerificationHistory />
+        ) : (
+          <div className="space-y-3">
+            {verifications.map((verification, index) => {
+              const config = statusConfig[verification.status]
+              return (
+                <div
+                  key={verification.id}
+                  className="flex items-start gap-3 p-3 bg-[var(--bg-muted)] rounded-lg transition-all hover:bg-gray-100 animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="text-[var(--text-secondary)] mt-0.5 flex-shrink-0">
+                    {inputTypeIcons[verification.inputType]}
                   </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-[var(--text-primary)] truncate">
+                      {verification.inputContent.slice(0, 50)}
+                      {verification.inputContent.length > 50 ? '...' : ''}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <Badge variant={config.variant} className="text-xs">
+                        {config.label}
+                      </Badge>
+                      <span className="text-xs text-[var(--text-secondary)]">
+                        {verification.confidence}%
+                      </span>
+                    </div>
+                  </div>
+                  <FreshnessIndicator timestamp={verification.timestamp} />
                 </div>
-                <span className="text-xs text-[var(--text-secondary)] whitespace-nowrap">
-                  {formatTimeAgo(verification.timestamp)}
-                </span>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
 }
+
+export const VerificationHistory = memo(VerificationHistoryComponent)
