@@ -6,6 +6,8 @@ import { HazardDetailsStep } from '@/components/report/HazardDetailsStep'
 import { LocationMediaStep } from '@/components/report/LocationMediaStep'
 import { AIVerificationStep } from '@/components/report/AIVerificationStep'
 import { SubmissionSuccess } from '@/components/report/SubmissionSuccess'
+import { DemoAutoFill } from '@/components/ui/DemoAutoFill'
+import { demoReportData } from '@/lib/demoMode'
 import type { ReportFormData, AIVerificationResult } from '@/lib/reportValidation'
 
 const STEPS = [
@@ -31,6 +33,19 @@ export default function ReportPage() {
     setFormData((prev) => ({ ...prev, ...data }))
   }
 
+  const handleDemoFill = (data: typeof demoReportData) => {
+    setFormData({
+      hazardType: data.hazardType,
+      description: data.description,
+      location: {
+        lat: data.location.lat,
+        lng: data.location.lng,
+        address: data.location.address,
+      },
+      media: [],
+    })
+  }
+
   const handleAIComplete = (result: AIVerificationResult) => {
     setAiResult(result)
     setCurrentStep(4)
@@ -50,6 +65,9 @@ export default function ReportPage() {
           Submit a hazard report to help keep your community safe.
         </p>
       </div>
+
+      {/* Demo Auto-Fill (only visible in demo mode) */}
+      {currentStep === 1 && <DemoAutoFill onFill={handleDemoFill} />}
 
       {/* Step Indicator */}
       {currentStep < 4 && <StepIndicator steps={STEPS} currentStep={currentStep} />}

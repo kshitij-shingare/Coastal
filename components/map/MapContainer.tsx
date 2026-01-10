@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useMemo, useCallback, useSyncExternalStore } from 'react'
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import { HeatZones } from './HeatZones'
@@ -14,6 +14,13 @@ interface MapContainerProps {
   confidenceThreshold: number
   onMarkerClick: (report: MapReport) => void
   extraReports?: MapReport[]
+}
+
+// Extended type to handle both coordinate formats
+interface ExtendedMapReport extends MapReport {
+  lat?: number
+  lng?: number
+  locationName?: string
 }
 
 const createHazardIcon = (color: string) => {
@@ -35,17 +42,26 @@ const createHazardIcon = (color: string) => {
   })
 }
 
+// Use useSyncExternalStore for client-side detection
+function subscribe() {
+  return () => {}
+}
+
+function getSnapshot() {
+  return true
+}
+
+function getServerSnapshot() {
+  return false
+}
+
 export function MapContainerComponent({
   selectedHazards,
   confidenceThreshold,
   onMarkerClick,
   extraReports,
 }: MapContainerProps) {
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   // Use extraReports if provided, otherwise use dummy data
   const allReports = useMemo(() => {
@@ -99,9 +115,10 @@ export function MapContainerComponent({
 
       {filteredReports.map((report) => {
         // Handle both coordinate formats
-        const lat = report.coordinates?.lat ?? (report as any).lat
-        const lng = report.coordinates?.lng ?? (report as any).lng
-        const locationName = report.location ?? (report as any).locationName
+        const extReport = report as ExtendedMapReport
+        const lat = report.coordinates?.lat ?? extReport.lat
+        const lng = report.coordinates?.lng ?? extReport.lng
+        const locationName = report.location ?? extReport.locationName
         
         if (!lat || !lng) return null
 

@@ -10,7 +10,7 @@ export default function PublicLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 pb-20 md:pb-0">
+      <main id="main-content" className="flex-1 pb-20 md:pb-0">
         <div className="container-main py-4 md:py-6 lg:py-8">
           {children}
         </div>

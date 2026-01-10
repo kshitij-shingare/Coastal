@@ -1,26 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { dummyReports, type DummyReport } from '@/data/dummyReports'
 
 export function useReports() {
-  const [reports, setReports] = useState<DummyReport[]>([])
-  const [loading, setLoading] = useState(true)
+  // Initialize with dummy data directly instead of using useEffect
+  const [reports, setReports] = useState<DummyReport[]>(dummyReports)
+  const [loading] = useState(false)
 
-  useEffect(() => {
-    // TODO: Fetch from API
-    setReports(dummyReports)
-    setLoading(false)
-  }, [])
-
-  const addReport = async (report: Omit<DummyReport, 'id'>) => {
+  const addReport = useCallback(async (report: Omit<DummyReport, 'id'>) => {
     // TODO: Submit to API
     const newReport: DummyReport = {
       ...report,
       id: Date.now().toString(),
     }
     setReports(prev => [newReport, ...prev])
-  }
+  }, [])
 
   return { reports, loading, addReport }
 }

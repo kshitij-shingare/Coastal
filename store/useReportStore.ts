@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Report, NewReportInput, ReportStatus, VISIBILITY_THRESHOLD } from '@/types/report'
+import type { Report, NewReportInput, ReportStatus } from '@/types/report'
 import type { SocialVerification, VerificationStatus, InputType } from '@/types/social'
 
 // Visibility threshold constant
