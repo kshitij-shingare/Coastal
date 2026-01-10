@@ -8,8 +8,6 @@ import { StatsCards } from '@/components/home/StatsCards'
 import { ReportFilters } from '@/components/home/ReportFilters'
 import { ReportFeed } from '@/components/home/ReportFeed'
 import { TipsWidget } from '@/components/home/TipsWidget'
-import { QuickInsights } from '@/components/home/QuickInsights'
-import { RecentActivity } from '@/components/home/RecentActivity'
 import { MiniMap } from '@/components/home/MiniMap'
 import { EmergencyContacts } from '@/components/home/EmergencyContacts'
 import { HazardTrendChart } from '@/components/charts/HazardTrendChart'
@@ -77,13 +75,7 @@ export default function HomePage() {
     const visibleStoreReports = storeReports.filter(
       r => r.status === 'verified' && r.confidence >= VISIBILITY_THRESHOLD
     )
-    const totalReports = dummyReports.length + visibleStoreReports.length
-    const highRiskCount = dummyReports.filter(r => r.severity === 'high').length +
-      visibleStoreReports.filter(r => r.severity === 'high').length
-    
     return {
-      totalReports,
-      highRiskCount,
       newReportsToday: visibleStoreReports.length,
     }
   }, [storeReports])
@@ -95,7 +87,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Hero Section */}
       <HeroSection />
 
@@ -103,7 +95,7 @@ export default function HomePage() {
       <AlertBanner
         severity="high"
         title="Active Flood Warning"
-        message="Flooding reported in Marina Bay Area. Avoid low-lying coastal roads and monitor official updates."
+        message="Flooding reported in Marina Bay Area. Avoid low-lying coastal roads."
       />
 
       {/* Stats Cards */}
@@ -123,43 +115,35 @@ export default function HomePage() {
         onTimeChange={setSelectedTime}
       />
 
-      {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left Column - Reports */}
-        <div className="lg:col-span-2 space-y-6">
+      {/* Main Content - Mobile First Layout */}
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-12">
+        {/* Reports Section - Full width on mobile, 8 cols on desktop */}
+        <div className="lg:col-span-8 order-1">
           <ReportFeed 
             reports={filteredReports} 
             isLoading={isLoading} 
             onClearFilters={clearFilters}
-            maxItems={5}
+            maxItems={6}
           />
         </div>
 
-        {/* Right Column - Widgets */}
-        <div className="space-y-6">
+        {/* Sidebar Widgets - Stack on mobile, 4 cols on desktop */}
+        <div className="lg:col-span-4 order-2 space-y-4 md:space-y-6">
+          {/* Mini Map */}
           <MiniMap />
-          <QuickInsights />
+          
+          {/* Tips Widget */}
           <TipsWidget />
-        </div>
-      </div>
-
-      {/* Secondary Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Activity Feed */}
-        <div className="lg:col-span-2">
-          <RecentActivity />
-        </div>
-
-        {/* Emergency Contacts */}
-        <div>
+          
+          {/* Emergency Contacts */}
           <EmergencyContacts />
         </div>
       </div>
 
       {/* Analytics Section */}
-      <section>
+      <section className="pt-2">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="heading-m flex items-center gap-2">
+          <h2 className="text-lg md:text-xl font-semibold flex items-center gap-2">
             <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
@@ -169,19 +153,19 @@ export default function HomePage() {
             href="/analytics" 
             className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
           >
-            Full Dashboard
+            View All
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
         </div>
         {isLoading ? (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
             <SkeletonChart />
             <SkeletonChart />
           </div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
             <HazardTrendChart data={hazardTrendData['7d']} title="Hazard Trends (7 Days)" />
             <RegionRiskChart />
           </div>
