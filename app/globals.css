@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Background colors */
+  --bg-main: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-muted: #F1F5F9;
+  
+  /* Text colors */
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  
+  /* Status colors */
+  --alert-red: #DC2626;
+  --warning-orange: #F59E0B;
+  --safe-green: #16A34A;
+  --info-blue: #2563EB;
+  
+  /* Border */
+  --border-soft: #E2E8F0;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--info-blue);
+  outline-offset: 2px;
+}
+
+/* Typography scale */
+.heading-xl {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.heading-l {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.heading-m {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.body-text {
+  font-size: 1rem;
+  line-height: 1.625;
+  color: var(--text-primary);
+}
+
+.small-text {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Container utility */
+.container-main {
+  width: 100%;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-main {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-main {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .heading-xl {
+    font-size: 2.25rem;
+  }
+  
+  .heading-l {
+    font-size: 1.875rem;
+  }
+  
+  .heading-m {
+    font-size: 1.5rem;
+  }
+}
+
+/* Leaflet map overrides */
+.leaflet-container {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+}
+
+/* Custom marker styles */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Hide scrollbar for filter panel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Safe area for iOS devices */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
