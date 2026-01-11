@@ -1,8 +1,15 @@
 export const hazardTypes = [
   { id: 'flood', name: 'Flooding', color: '#3B82F6' },
-  { id: 'erosion', name: 'Erosion', color: '#F59E0B' },
+  { id: 'erosion', name: 'Coastal Erosion', color: '#F59E0B' },
   { id: 'rip-current', name: 'Rip Current', color: '#EF4444' },
   { id: 'storm-surge', name: 'Storm Surge', color: '#8B5CF6' },
   { id: 'tsunami', name: 'Tsunami Warning', color: '#DC2626' },
   { id: 'pollution', name: 'Water Pollution', color: '#10B981' },
+  { id: 'high-waves', name: 'High Waves / Rough Sea', color: '#0EA5E9' },
+  { id: 'jellyfish', name: 'Jellyfish / Marine Life', color: '#EC4899' },
+  { id: 'debris', name: 'Debris / Obstruction', color: '#78716C' },
+  { id: 'infrastructure', name: 'Infrastructure Damage', color: '#F97316' },
+  { id: 'oil-spill', name: 'Oil Spill', color: '#1F2937' },
+  { id: 'algae-bloom', name: 'Algae Bloom', color: '#84CC16' },
+  { id: 'other', name: 'Other', color: '#6B7280' },
 ]

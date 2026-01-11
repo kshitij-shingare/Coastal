@@ -20,6 +20,8 @@ interface HazardDetailsStepProps {
 
 export function HazardDetailsStep({ data, onUpdate, onNext }: HazardDetailsStepProps) {
   const [errors, setErrors] = useState<string[]>([])
+  const [showOtherInput, setShowOtherInput] = useState(data.hazardType === 'other')
+  const [otherDescription, setOtherDescription] = useState('')
 
   // Auto-suggest hazard based on description using useMemo
   const suggestedHazard = useMemo(() => {
@@ -32,11 +34,22 @@ export function HazardDetailsStep({ data, onUpdate, onNext }: HazardDetailsStepP
     return null
   }, [data.description, data.hazardType])
 
+  const selectedHazard = hazardTypes.find(h => h.id === data.hazardType)
+
+  const handleHazardChange = (hazardId: string) => {
+    onUpdate({ hazardType: hazardId })
+    setShowOtherInput(hazardId === 'other')
+  }
+
   const handleNext = () => {
     const newErrors: string[] = []
 
     if (!data.hazardType) {
       newErrors.push('Please select a hazard type')
+    }
+
+    if (data.hazardType === 'other' && !otherDescription.trim()) {
+      newErrors.push('Please describe the hazard type')
     }
 
     if (data.description.length < MIN_DESCRIPTION_LENGTH) {
@@ -52,7 +65,7 @@ export function HazardDetailsStep({ data, onUpdate, onNext }: HazardDetailsStepP
 
   const applySuggestion = () => {
     if (suggestedHazard) {
-      onUpdate({ hazardType: suggestedHazard })
+      handleHazardChange(suggestedHazard)
     }
   }
 
@@ -64,41 +77,65 @@ export function HazardDetailsStep({ data, onUpdate, onNext }: HazardDetailsStepP
       <CardContent className="pt-6">
         <h2 className="heading-m mb-6">Hazard Details</h2>
 
-        {/* Hazard Type Selection */}
+        {/* Hazard Type Selection - Dropdown */}
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2">
             Hazard Type <span className="text-[var(--alert-red)]">*</span>
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {hazardTypes.map((hazard) => (
-              <button
-                key={hazard.id}
-                type="button"
-                onClick={() => onUpdate({ hazardType: hazard.id })}
-                className={`
-                  p-3 rounded-lg border-2 text-left transition-all
-                  ${data.hazardType === hazard.id
-                    ? 'border-[var(--info-blue)] bg-blue-50'
-                    : 'border-[var(--border-soft)] hover:border-[var(--info-blue)] hover:bg-[var(--bg-muted)]'
-                  }
-                `}
-              >
-                <span
-                  className="w-3 h-3 rounded-full inline-block mr-2"
-                  style={{ backgroundColor: hazard.color }}
-                />
-                <span className="text-sm font-medium">{hazard.name}</span>
-              </button>
-            ))}
+          <div className="relative">
+            <select
+              value={data.hazardType}
+              onChange={(e) => handleHazardChange(e.target.value)}
+              className="w-full p-3 pr-10 rounded-lg border border-[var(--border-soft)] bg-[var(--bg-card)] text-[var(--text-primary)] appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--info-blue)] focus:border-transparent"
+            >
+              <option value="">Select hazard type...</option>
+              {hazardTypes.map((hazard) => (
+                <option key={hazard.id} value={hazard.id}>
+                  {hazard.name}
+                </option>
+              ))}
+            </select>
+            {/* Dropdown arrow */}
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
+
+          {/* Selected hazard indicator */}
+          {selectedHazard && (
+            <div className="mt-2 flex items-center gap-2">
+              <span
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: selectedHazard.color }}
+              />
+              <span className="text-sm text-[var(--text-secondary)]">
+                Selected: {selectedHazard.name}
+              </span>
+            </div>
+          )}
+
+          {/* Other hazard input */}
+          {showOtherInput && (
+            <div className="mt-3">
+              <input
+                type="text"
+                value={otherDescription}
+                onChange={(e) => setOtherDescription(e.target.value)}
+                placeholder="Please describe the hazard type..."
+                className="w-full p-3 rounded-lg border border-[var(--border-soft)] bg-[var(--bg-card)] focus:outline-none focus:ring-2 focus:ring-[var(--info-blue)]"
+              />
+            </div>
+          )}
 
           {/* AI Suggestion */}
           {suggestedHazard && (
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
+            <div className="mt-3 p-3 bg-blue-50 rounded-lg flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-center gap-2">
                 <Badge variant="info" size="sm">AI Suggestion</Badge>
                 <span className="text-sm">
-                  Based on your description, this might be a{' '}
+                  This might be a{' '}
                   <strong>{hazardTypes.find(h => h.id === suggestedHazard)?.name}</strong>
                 </span>
               </div>
@@ -117,7 +154,7 @@ export function HazardDetailsStep({ data, onUpdate, onNext }: HazardDetailsStepP
           <textarea
             value={data.description}
             onChange={(e) => onUpdate({ description: e.target.value })}
-            placeholder="Describe the hazard situation in detail. You can write in your local language..."
+            placeholder="Describe the hazard situation in detail. Include what you observed, severity, and any immediate dangers..."
             className={`
               w-full p-3 rounded-lg border bg-[var(--bg-card)] min-h-[120px] resize-none
               focus:outline-none focus:ring-2 focus:ring-[var(--info-blue)]
