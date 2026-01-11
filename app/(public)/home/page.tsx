@@ -5,7 +5,6 @@ import { AlertBanner } from '@/components/home/AlertBanner'
 import { StatsCards } from '@/components/home/StatsCards'
 import { ReportFilters } from '@/components/home/ReportFilters'
 import { ReportFeed } from '@/components/home/ReportFeed'
-import { TipsWidget } from '@/components/home/TipsWidget'
 import { HazardTrendChart } from '@/components/charts/HazardTrendChart'
 import { RegionRiskChart } from '@/components/charts/RegionRiskChart'
 import { SkeletonStats, SkeletonChart } from '@/components/ui/Skeleton'
@@ -113,14 +112,7 @@ export default function HomePage() {
         onTimeChange={setSelectedTime}
       />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <ReportFeed reports={filteredReports} isLoading={isLoading} />
-        </div>
-        <div className="space-y-6">
-          <TipsWidget />
-        </div>
-      </div>
+      <ReportFeed reports={filteredReports} isLoading={isLoading} />
 
       <section>
         <h2 className="heading-m mb-4">Trends & Analytics</h2>
