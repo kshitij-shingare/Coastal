@@ -3,9 +3,9 @@
 import { Suspense, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { signIn, useSession } from 'next-auth/react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Loader } from '@/components/ui/Loader'
-import { useAuth } from '@/hooks/useAuth'
 
 function GoogleIcon() {
   return (
@@ -19,23 +19,24 @@ function GoogleIcon() {
 }
 
 function LoginForm() {
-  const { isLoggedIn, isLoading: authLoading, login } = useAuth()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/home'
+  const callbackUrl = searchParams.get('redirect') || '/home'
   const error = searchParams.get('error')
   
   const [isSigningIn, setIsSigningIn] = useState(false)
 
+  // Redirect if already logged in
   useEffect(() => {
-    if (isLoggedIn) {
-      router.push(redirect)
+    if (status === 'authenticated' && session) {
+      router.replace(callbackUrl)
     }
-  }, [isLoggedIn, redirect, router])
+  }, [status, session, callbackUrl, router])
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setIsSigningIn(true)
-    login()
+    await signIn('google', { callbackUrl })
   }
 
   const getErrorMessage = (errorCode: string | null) => {
@@ -55,6 +56,17 @@ function LoginForm() {
   }
 
   const errorMessage = getErrorMessage(error)
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <Card className="w-full max-w-md">
+        <CardContent className="pt-8 pb-6 flex justify-center">
+          <Loader size="lg" />
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card className="w-full max-w-md">
@@ -83,7 +95,7 @@ function LoginForm() {
         {/* Google Sign In Button */}
         <button
           onClick={handleGoogleSignIn}
-          disabled={isSigningIn || authLoading}
+          disabled={isSigningIn}
           className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           {isSigningIn ? (

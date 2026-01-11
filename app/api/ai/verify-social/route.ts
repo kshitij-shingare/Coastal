@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// TODO: Import and use openai when implementing
-// import { openai } from '@/lib/openai'
+import { verifySocialContent } from '@/lib/gemini'
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse request body for future use
-    await request.json()
-    // TODO: Implement social media verification with OpenAI
-    return NextResponse.json({ credibility: 'high', analysis: 'Content appears authentic' })
-  } catch {
-    return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
+    const body = await request.json()
+    
+    const { type, content } = body
+    
+    if (!type || !content) {
+      return NextResponse.json(
+        { error: 'Missing required fields: type and content' },
+        { status: 400 }
+      )
+    }
+
+    const result = await verifySocialContent({ type, content })
+
+    return NextResponse.json(result)
+  } catch (error) {
+    console.error('Social verification error:', error)
+    return NextResponse.json(
+      { error: 'Verification failed' },
+      { status: 500 }
+    )
   }
 }

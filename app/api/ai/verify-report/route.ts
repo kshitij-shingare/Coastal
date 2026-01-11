@@ -1,15 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-// TODO: Import and use openai when implementing
-// import { openai } from '@/lib/openai'
+import { verifyHazardReport } from '@/lib/gemini'
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse request body for future use
-    await request.json()
-    // TODO: Implement AI verification logic with OpenAI
-    return NextResponse.json({ verified: true, confidence: 0.85 })
-  } catch {
-    return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
+    const body = await request.json()
+    
+    const { hazardType, description, location, hasMedia } = body
+    
+    if (!hazardType || !description) {
+      return NextResponse.json(
+        { error: 'Missing required fields: hazardType and description' },
+        { status: 400 }
+      )
+    }
+
+    const result = await verifyHazardReport({
+      hazardType,
+      description,
+      location,
+      hasMedia: hasMedia || false,
+    })
+
+    return NextResponse.json(result)
+  } catch (error) {
+    console.error('Verification error:', error)
+    return NextResponse.json(
+      { error: 'Verification failed' },
+      { status: 500 }
+    )
   }
 }

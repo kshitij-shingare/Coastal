@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { SessionProvider } from '@/components/providers/SessionProvider'
 import { AuthProvider } from '@/hooks/useAuth'
 import { ToastContainer } from '@/components/ui/Toast'
 import { OfflineBanner } from '@/components/ui/OfflineBanner'
@@ -23,14 +24,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-[var(--bg-main)]">
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-[var(--bg-main)]" suppressHydrationWarning>
         <SkipToContent />
         <OfflineBanner />
-        <AuthProvider>
-          {children}
-          <ToastContainer />
-        </AuthProvider>
+        <SessionProvider>
+          <AuthProvider>
+            {children}
+            <ToastContainer />
+          </AuthProvider>
+        </SessionProvider>
       </body>
     </html>
   )

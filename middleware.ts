@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { PROTECTED_PATHS } from '@/lib/routes'
+import { getToken } from 'next-auth/jwt'
 
-export function middleware(request: NextRequest) {
+const PROTECTED_PATHS = ['/report', '/analytics', '/social-verify']
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
   const isProtected = PROTECTED_PATHS.some(path => pathname.startsWith(path))
@@ -11,10 +13,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const authCookie = request.cookies.get('coastal_hazard_auth')
-  const isAuthenticated = authCookie?.value === 'true'
+  // Check for NextAuth session token
+  const token = await getToken({ 
+    req: request, 
+    secret: process.env.NEXTAUTH_SECRET 
+  })
 
-  if (!isAuthenticated) {
+  if (!token) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
