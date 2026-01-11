@@ -1,17 +1,33 @@
-import { cookies } from 'next/headers'
+import { NextAuthOptions } from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
 
-export async function getSession() {
-  const cookieStore = await cookies()
-  const token = cookieStore.get('auth-token')
-  return token ? { isAuthenticated: true, token: token.value } : null
-}
-
-export async function setSession(token: string) {
-  const cookieStore = await cookies()
-  cookieStore.set('auth-token', token, { httpOnly: true, secure: true })
-}
-
-export async function clearSession() {
-  const cookieStore = await cookies()
-  cookieStore.delete('auth-token')
+export const authOptions: NextAuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
+  callbacks: {
+    async session({ session, token }) {
+      // Add user id to session
+      if (session.user) {
+        session.user.id = token.sub as string
+      }
+      return session
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
 }

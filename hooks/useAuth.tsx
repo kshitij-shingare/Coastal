@@ -1,53 +1,59 @@
 'use client'
 
-import { useState, useCallback, createContext, useContext, ReactNode, useSyncExternalStore } from 'react'
+import { createContext, useContext, ReactNode } from 'react'
+import { useSession, signIn, signOut, SessionProvider } from 'next-auth/react'
+
+interface User {
+  id: string
+  name?: string | null
+  email?: string | null
+  image?: string | null
+}
 
 interface AuthContextType {
   isLoggedIn: boolean
   isLoading: boolean
+  user: User | null
   login: () => void
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-const AUTH_KEY = 'coastal_hazard_auth'
+function AuthContextProvider({ children }: { children: ReactNode }) {
+  const { data: session, status } = useSession()
+  
+  const isLoading = status === 'loading'
+  const isLoggedIn = status === 'authenticated' && !!session?.user
+  const user = session?.user ? {
+    id: session.user.id || session.user.email || '',
+    name: session.user.name,
+    email: session.user.email,
+    image: session.user.image,
+  } : null
 
-function getSnapshot(): boolean {
-  if (typeof window === 'undefined') return false
-  return localStorage.getItem(AUTH_KEY) === 'true'
-}
+  const login = () => {
+    signIn('google', { callbackUrl: '/home' })
+  }
 
-function getServerSnapshot(): boolean {
-  return false
-}
+  const logout = () => {
+    signOut({ callbackUrl: '/home' })
+  }
 
-function subscribe(callback: () => void): () => void {
-  window.addEventListener('storage', callback)
-  return () => window.removeEventListener('storage', callback)
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function AuthProvider({ children }: { children: ReactNode }): React.JSX.Element {
-  const storedAuth = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-  const [isLoggedIn, setIsLoggedIn] = useState(storedAuth)
-  const [isLoading] = useState(false)
-
-  const login = useCallback(() => {
-    localStorage.setItem(AUTH_KEY, 'true')
-    document.cookie = `${AUTH_KEY}=true; path=/; max-age=86400`
-    setIsLoggedIn(true)
-  }, [])
-
-  const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_KEY)
-    document.cookie = `${AUTH_KEY}=; path=/; max-age=0`
-    setIsLoggedIn(false)
-  }, [])
-
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <SessionProvider>
+      <AuthContextProvider>
+        {children}
+      </AuthContextProvider>
+    </SessionProvider>
   )
 }
 
