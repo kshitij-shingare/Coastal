@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: coastal-hazards-api
+    env: node
+    buildCommand: npm install && npm run build:server
+    startCommand: node dist/server/server/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DEMO_MODE
+        value: true
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: coastal-hazards-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false

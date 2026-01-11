@@ -323,3 +323,21 @@
 {"level":"info","message":"Demo Mode: ENABLED","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:21:05"}
 {"level":"info","message":"Health check: http://localhost:5000/health/detailed","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:21:05"}
 {"level":"info","message":"API documentation: http://localhost:5000/api/v1/docs","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:21:05"}
+{"level":"info","message":"WebSocket handlers initialized","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Starting server in DEMO MODE (no external services required)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Database connection skipped (DEMO MODE)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Redis connection skipped (DEMO MODE)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Server running on port 5000","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Environment: development","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Demo Mode: ENABLED","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"Health check: http://localhost:5000/health/detailed","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"API documentation: http://localhost:5000/api/v1/docs","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:42:37"}
+{"level":"info","message":"WebSocket handlers initialized","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Starting server in DEMO MODE (no external services required)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Database connection skipped (DEMO MODE)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Redis connection skipped (DEMO MODE)","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Server running on port 5000","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Environment: development","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Demo Mode: ENABLED","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"Health check: http://localhost:5000/health/detailed","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
+{"level":"info","message":"API documentation: http://localhost:5000/api/v1/docs","service":"coastal-hazard-intelligence","timestamp":"2026-01-11 11:46:16"}
