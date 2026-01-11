@@ -154,14 +154,10 @@ export function FeedCard({
   return (
     <article
       className={`
-        relative bg-white rounded-xl border-2 overflow-hidden transition-all duration-200
+        relative bg-white rounded-xl border overflow-hidden transition-all duration-200
         ${isResolved 
           ? 'opacity-60 border-gray-200 bg-gray-50' 
-          : urgency.level === 'critical'
-            ? 'border-red-300 shadow-md shadow-red-100'
-            : urgency.level === 'high'
-              ? 'border-orange-200 shadow-sm'
-              : 'border-[var(--border-soft)] hover:border-[var(--info-blue)] hover:shadow-md'
+          : 'border-[var(--border-soft)] hover:border-[var(--info-blue)] hover:shadow-md'
         }
       `}
       aria-label={`${post.title} - ${post.status}`}
