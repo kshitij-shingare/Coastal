@@ -29,28 +29,22 @@ function UserMenu({ user, onLogout }: { user: { name?: string | null; email?: st
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1 rounded-full hover:bg-[var(--bg-muted)] transition-colors"
+        className="p-0.5 rounded-full hover:ring-2 hover:ring-[var(--border-soft)] transition-all"
         aria-label="User menu"
       >
         {user.image ? (
           <Image
             src={user.image}
             alt={displayName}
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-full"
+            width={36}
+            height={36}
+            className="w-9 h-9 rounded-full"
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-xs font-medium">
+          <div className="w-9 h-9 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-sm font-medium">
             {initials}
           </div>
         )}
-        <span className="hidden sm:block text-sm font-medium text-[var(--text-primary)] max-w-[120px] truncate">
-          {displayName}
-        </span>
-        <svg className="w-4 h-4 text-[var(--text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
       </button>
 
       {isOpen && (
