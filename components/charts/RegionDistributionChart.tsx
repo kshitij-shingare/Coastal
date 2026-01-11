@@ -28,38 +28,38 @@ const RISK_COLORS = {
 function RegionDistributionChartComponent({ data, title = 'Regional Distribution' }: RegionDistributionChartProps) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base sm:text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-72 w-full">
+      <CardContent className="pt-0">
+        <div className="h-56 sm:h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
               layout="vertical"
-              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+              margin={{ top: 5, right: 15, left: 0, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-soft)" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" horizontal={false} />
               <XAxis
                 type="number"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 10, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
               />
               <YAxis
                 type="category"
                 dataKey="region"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 9, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
-                width={100}
+                width={80}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-soft)',
+                  backgroundColor: '#fff',
+                  border: '1px solid #E5E7EB',
                   borderRadius: '8px',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 }}
                 formatter={(value, name, props) => {
@@ -75,7 +75,7 @@ function RegionDistributionChartComponent({ data, title = 'Regional Distribution
                   ]
                 }}
               />
-              <Bar dataKey="reports" radius={[0, 4, 4, 0]} barSize={24}>
+              <Bar dataKey="reports" radius={[0, 4, 4, 0]} barSize={20}>
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={RISK_COLORS[entry.riskLevel]} />
                 ))}
@@ -85,18 +85,18 @@ function RegionDistributionChartComponent({ data, title = 'Regional Distribution
         </div>
         
         {/* Legend */}
-        <div className="flex justify-center gap-6 mt-4 text-xs">
+        <div className="flex justify-center gap-4 sm:gap-6 mt-3 text-xs">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded" style={{ backgroundColor: RISK_COLORS.high }} />
-            <span className="text-[var(--text-secondary)]">High Risk</span>
+            <span className="w-2.5 h-2.5 rounded" style={{ backgroundColor: RISK_COLORS.high }} />
+            <span className="text-gray-600">High</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded" style={{ backgroundColor: RISK_COLORS.medium }} />
-            <span className="text-[var(--text-secondary)]">Medium Risk</span>
+            <span className="w-2.5 h-2.5 rounded" style={{ backgroundColor: RISK_COLORS.medium }} />
+            <span className="text-gray-600">Medium</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded" style={{ backgroundColor: RISK_COLORS.low }} />
-            <span className="text-[var(--text-secondary)]">Low Risk</span>
+            <span className="w-2.5 h-2.5 rounded" style={{ backgroundColor: RISK_COLORS.low }} />
+            <span className="text-gray-600">Low</span>
           </div>
         </div>
       </CardContent>

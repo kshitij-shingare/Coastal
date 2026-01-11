@@ -28,13 +28,13 @@ const RISK_COLORS = {
 function RiskTimelineChartComponent({ data, title = 'Risk Level Timeline' }: RiskTimelineChartProps) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base sm:text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-72 w-full">
+      <CardContent className="pt-0">
+        <div className="h-56 sm:h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradient-high" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={RISK_COLORS.high.fill} stopOpacity={0.4} />
@@ -49,36 +49,38 @@ function RiskTimelineChartComponent({ data, title = 'Risk Level Timeline' }: Ris
                   <stop offset="95%" stopColor={RISK_COLORS.low.fill} stopOpacity={0.05} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-soft)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
               <XAxis
                 dataKey="time"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 10, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
+                interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 10, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
+                width={30}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-soft)',
+                  backgroundColor: '#fff',
+                  border: '1px solid #E5E7EB',
                   borderRadius: '8px',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 }}
               />
               <Legend
-                wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
+                wrapperStyle={{ fontSize: '10px', paddingTop: '8px' }}
                 iconType="circle"
-                iconSize={8}
+                iconSize={6}
               />
               <Area
                 type="monotone"
                 dataKey="high"
-                name="High Risk"
+                name="High"
                 stroke={RISK_COLORS.high.stroke}
                 fill="url(#gradient-high)"
                 strokeWidth={2}
@@ -87,7 +89,7 @@ function RiskTimelineChartComponent({ data, title = 'Risk Level Timeline' }: Ris
               <Area
                 type="monotone"
                 dataKey="medium"
-                name="Medium Risk"
+                name="Medium"
                 stroke={RISK_COLORS.medium.stroke}
                 fill="url(#gradient-medium)"
                 strokeWidth={2}
@@ -96,7 +98,7 @@ function RiskTimelineChartComponent({ data, title = 'Risk Level Timeline' }: Ris
               <Area
                 type="monotone"
                 dataKey="low"
-                name="Low Risk"
+                name="Low"
                 stroke={RISK_COLORS.low.stroke}
                 fill="url(#gradient-low)"
                 strokeWidth={2}

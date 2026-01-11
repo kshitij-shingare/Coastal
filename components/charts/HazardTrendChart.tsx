@@ -30,13 +30,13 @@ const HAZARD_COLORS = {
 function HazardTrendChartComponent({ data, title = 'Hazard Trends' }: HazardTrendChartProps) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base sm:text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-72 w-full">
+      <CardContent className="pt-0">
+        <div className="h-56 sm:h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 10, right: 5, left: -25, bottom: 0 }}>
               <defs>
                 {Object.entries(HAZARD_COLORS).map(([key, colors]) => (
                   <linearGradient key={key} id={`gradient-${key}`} x1="0" y1="0" x2="0" y2="1">
@@ -45,36 +45,38 @@ function HazardTrendChartComponent({ data, title = 'Hazard Trends' }: HazardTren
                   </linearGradient>
                 ))}
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-soft)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
               <XAxis
                 dataKey="time"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 10, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
+                interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
-                axisLine={{ stroke: 'var(--border-soft)' }}
+                tick={{ fontSize: 10, fill: '#6B7280' }}
+                axisLine={{ stroke: '#E5E7EB' }}
                 tickLine={false}
+                width={30}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-soft)',
+                  backgroundColor: '#fff',
+                  border: '1px solid #E5E7EB',
                   borderRadius: '8px',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 }}
               />
               <Legend
-                wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
+                wrapperStyle={{ fontSize: '10px', paddingTop: '8px' }}
                 iconType="circle"
-                iconSize={8}
+                iconSize={6}
               />
               <Area
                 type="monotone"
                 dataKey="flood"
-                name="Flooding"
+                name="Flood"
                 stroke={HAZARD_COLORS.flood.stroke}
                 fill={`url(#gradient-flood)`}
                 strokeWidth={2}
@@ -98,17 +100,9 @@ function HazardTrendChartComponent({ data, title = 'Hazard Trends' }: HazardTren
               <Area
                 type="monotone"
                 dataKey="stormSurge"
-                name="Storm Surge"
+                name="Storm"
                 stroke={HAZARD_COLORS.stormSurge.stroke}
                 fill={`url(#gradient-stormSurge)`}
-                strokeWidth={2}
-              />
-              <Area
-                type="monotone"
-                dataKey="tsunami"
-                name="Tsunami"
-                stroke={HAZARD_COLORS.tsunami.stroke}
-                fill={`url(#gradient-tsunami)`}
                 strokeWidth={2}
               />
             </AreaChart>
