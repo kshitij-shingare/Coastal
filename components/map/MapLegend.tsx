@@ -4,78 +4,107 @@ import { useState } from 'react'
 import { hazardTypes } from '@/data/hazardTypes'
 
 export function MapLegend() {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(true)
 
   const riskLevels = [
-    { level: 'High Risk', color: '#EF4444', opacity: 0.4 },
-    { level: 'Medium Risk', color: '#F59E0B', opacity: 0.35 },
-    { level: 'Low Risk', color: '#FBBF24', opacity: 0.3 },
+    { level: 'High Risk', color: '#EF4444', description: 'Immediate danger' },
+    { level: 'Medium Risk', color: '#F59E0B', description: 'Use caution' },
+    { level: 'Low Risk', color: '#FBBF24', description: 'Stay aware' },
   ]
 
   return (
     <div className="absolute bottom-4 right-4 z-[500]">
-      {/* Toggle button for mobile */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="lg:hidden mb-2 ml-auto flex items-center gap-2 px-3 py-2 bg-[var(--bg-card)] rounded-lg shadow-md text-sm font-medium"
-        aria-expanded={!isCollapsed}
-        aria-controls="map-legend"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-        </svg>
-        Legend
-        <svg
-          className={`w-4 h-4 transition-transform ${isCollapsed ? '' : 'rotate-180'}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      {/* Collapsed state - just show toggle */}
+      {isCollapsed ? (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-card)] rounded-lg shadow-lg text-sm font-medium hover:bg-[var(--bg-muted)] transition-colors"
+          aria-expanded={false}
+          aria-controls="map-legend"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Legend
+        </button>
+      ) : (
+        /* Expanded legend panel */
+        <div
+          id="map-legend"
+          className="bg-[var(--bg-card)] rounded-lg shadow-lg overflow-hidden w-56"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-3 py-2 bg-[var(--bg-muted)] border-b border-[var(--border-soft)]">
+            <h3 className="text-sm font-semibold">Map Legend</h3>
+            <button
+              onClick={() => setIsCollapsed(true)}
+              className="p-1 rounded hover:bg-[var(--bg-card)] transition-colors"
+              aria-label="Collapse legend"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-      {/* Legend panel */}
-      <div
-        id="map-legend"
-        className={`bg-[var(--bg-card)] rounded-lg shadow-lg p-4 transition-all ${
-          isCollapsed ? 'hidden lg:block' : 'block'
-        }`}
-      >
-        <h3 className="text-sm font-semibold mb-3">Map Legend</h3>
-
-        {/* Hazard Types */}
-        <div className="mb-4">
-          <p className="text-xs text-[var(--text-secondary)] mb-2">Hazard Types</p>
-          <div className="space-y-1.5">
-            {hazardTypes.map((hazard) => (
-              <div key={hazard.id} className="flex items-center gap-2">
-                <span
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: hazard.color }}
-                />
-                <span className="text-xs">{hazard.name}</span>
+          <div className="p-3">
+            {/* Hazard Types */}
+            <div className="mb-3">
+              <p className="text-xs font-medium text-[var(--text-secondary)] mb-2 uppercase tracking-wide">
+                Hazard Types
+              </p>
+              <div className="space-y-1.5">
+                {hazardTypes.map((hazard) => (
+                  <div key={hazard.id} className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded-full border-2 border-white shadow-sm shrink-0"
+                      style={{ backgroundColor: hazard.color }}
+                    />
+                    <span className="text-xs">{hazard.name}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-[var(--border-soft)] my-3" />
+
+            {/* Risk Zones */}
+            <div>
+              <p className="text-xs font-medium text-[var(--text-secondary)] mb-2 uppercase tracking-wide">
+                Risk Zones
+              </p>
+              <div className="space-y-1.5">
+                {riskLevels.map((risk) => (
+                  <div key={risk.level} className="flex items-center gap-2">
+                    <span
+                      className="w-3 h-3 rounded border shrink-0"
+                      style={{ 
+                        backgroundColor: risk.color + '40',
+                        borderColor: risk.color 
+                      }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-medium">{risk.level}</span>
+                      <span className="text-xs text-[var(--text-secondary)] ml-1">
+                        - {risk.description}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tip */}
+            <div className="mt-3 pt-3 border-t border-[var(--border-soft)]">
+              <p className="text-xs text-[var(--text-secondary)] flex items-start gap-1.5">
+                <span className="text-blue-500">💡</span>
+                Click markers for details
+              </p>
+            </div>
           </div>
         </div>
-
-        {/* Risk Levels */}
-        <div>
-          <p className="text-xs text-[var(--text-secondary)] mb-2">Risk Zones</p>
-          <div className="space-y-1.5">
-            {riskLevels.map((risk) => (
-              <div key={risk.level} className="flex items-center gap-2">
-                <span
-                  className="w-3 h-3 rounded"
-                  style={{ backgroundColor: risk.color, opacity: risk.opacity + 0.3 }}
-                />
-                <span className="text-xs">{risk.level}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
